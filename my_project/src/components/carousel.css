@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+
+.homeDiv {
+    display: block;
+    padding-left: 18%;
+    padding-right: 18%;
+    width: 100%;
+    padding-bottom: 50%;
+}
+
+.parent {
+    display: block;
+    width: 100%;
+    height: 50%;
+    padding-bottom: 250px;
+}
+
+.Slider + .innerSlider + .slick-list + .slick-dots + .slick-track {
+    display: block;
+    width: 90%;
+    height:500px;
+  }
+
+
+  /* .img .Slider .innerSlider {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 75vw;
+      height: 50vw;
+  } */
+
+  .homeHeader {
+      text-align: center;
+      vertical-align: middle;
+      font-size: 36px;
+      padding: 10px, 10px, 10px, 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+  }
+  
+  .img {
+      max-height: 450px;
+      max-width: 600px;
+      margin-left: 20px;
+      margin-right: 20px;
+      object-fit: contain;
+    } 
+
+

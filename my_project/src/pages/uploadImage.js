@@ -1,29 +1,57 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import ReactDOM from 'react-dom';
 import "../components/form.css";
 import axios from "axios";
 import baseURL from "../axios";
 import { withFormik, Formik } from "formik";
 import * as Yup from "yup";
 import classnames from "classnames";
-import ImagePreview from "../components/imagePreview";
-import InputReader from "../components/inputReader";
+import { render } from "@testing-library/react";
 
 
-function UploadImage() {
+const GetImageContent = ({file}) => {
     
-    // const [image, setImage] = useState({
-    //     file: null,
-    //     loading: true
-    // });
+    const [imageLinkState, setImageLinkState] = useState({
+        loading: false,
+        imageLink: undefined
+    });
 
-    // const uploadedImage = useRef(null);
+    const { loading, imageLink } = imageLinkState;
 
-    // const imageUploader = useRef(null);
-    
+    useEffect(() => {
+        setImageLinkState((imageLinkState) => ({ ...imageLinkState, loading: true }));
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImageLinkState({ loading: false, imageLink: reader.result });
+        };
+        if (file && file.type.match("image.*")) {
+            reader.readAsDataURL(file);
+        }
+    }, [file]);
+
+    if (!file) {
+        return null;
+    }
+
+    return (
+        <img
+            src={imageLink}
+            alt={file.name}
+            className="img_thumbnail"
+            height={200}
+            width={200}
+        />
+    );
+}
+
+const UploadImage = () => {
+    const [imageLinkValue, setImageLinkValue] = useState({ file: null});
+    const { file } = imageLinkValue;
+
     const formikEnhancer = withFormik({
     validationSchema: Yup.object().shape({
         imageName: Yup.string().required("Image name is required.").max(150),
-        imageLink: Yup.mixed().required("An image file is required."),
+        file: Yup.mixed().required("An image file is required."),
         userEmail: Yup.string()
         .email("Invalid email format")
         .required("Email address is required.")
@@ -40,24 +68,12 @@ function UploadImage() {
         ...props,
     }),
 
-    fileUploadHandler: (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload= function(result) {
-                Formik.setFieldValues({ imageLink: result, imageFile: file});
-            };
-            reader.readAsDataURL(file);
-            // console.log(result);
-            console.log(file);
-        }
+    handleSubmit: (payload, { setSubmitting }) => {
         
-    },
-
-    handleSubmit: (payload, { setSubmitting  }) => {
 
         const form = new FormData();
-        form.append("imageLink", payload.imageFile);
+        form.append("imageLink", file.name);
+        form.append("imageData", file.src);
         form.append("imageName", payload.imageName);
         form.append("userEmail", payload.userEmail);
         form.append("copyright", payload.copyright);
@@ -82,7 +98,7 @@ function UploadImage() {
             console.log(err);
         })
         .finally(() => {
-            window.location.reload();
+            Formik.resetForm();
         });
 
         setSubmitting(false);
@@ -145,13 +161,16 @@ function UploadImage() {
         errors,
         dirty,
         handleChange,
+        setValues,
         handleBlur,
-        fileUploadHandler,
         handleSubmit,
         handleReset,
         isSubmitting,
         } = props;
-        
+
+        const [imageLink, setImageLink] = useState();
+        const imageLoaded = event => setImageLink(imageLink);
+    
         return (
         <div className="wrapper"> 
             <div className="card-border">
@@ -176,26 +195,18 @@ function UploadImage() {
                                     id="imageLink"
                                     name="file"
                                     type="file"
-                                    accept=".png, .jpg, .jpeg, .gif"
+                                    accept=".jpg, .jpeg, .png, .gif"
                                     label="Select Image:"
-                                    required
                                     errors={touched.imageLink && errors.imageLink}
-                                    onChange={fileUploadHandler}
                                     onBlur={handleBlur}
-                                    // onChange={e => {
-                                    //   var file = e.target.files[0];
-                                    //   var reader = new FileReader();
-                                    //   //Formik.setFieldValue("file", reader.result)
-                                    //   reader.onload = function(i) {
-                                    //     Formik.setFieldValue("imageLink", i.target.result);
-                                    //   };
-                                    //   reader.readAsDataURL(file)
-                                    //   return(<ImagePreview file={values.imageLink} />)
-                                    // }}
+                                    onChange={(event) => {
+                                        setImageLinkValue({...imageLinkValue, file: event.currentTarget.files[0]});
+                                    }}
+                
                                 />
-                                <div className="imgPreview">
-                                    <img alt="loading" src={values.imageLink} height={800} width={640} />
-                                </div>
+                                
+                                <GetImageContent file={file} />
+                                
                             </div>
                         </div>
                         <div className="userInfo">
@@ -280,9 +291,7 @@ function UploadImage() {
                         >
                         Clear
                         </button>
-                        <button type="submit" disabled={isSubmitting}>
-                        Submit
-                        </button>
+                        <button type="submit" disabled={isSubmitting}>Submit</button>
                     </form>
                 </div>
             </div>
@@ -298,7 +307,7 @@ function UploadImage() {
       props={{
         imageName: "",
         imageLink: null,
-        imageFile: null,
+        imageData: null,
         userEmail: "",
         copyright: false,
         userCopyright: "",

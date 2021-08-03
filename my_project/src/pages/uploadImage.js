@@ -34,10 +34,10 @@ const UploadImage = () => {
         ...props,
     }),
 
-    handleSubmit: (values, {setSubmitting} ) => {
+    handleSubmit: async (values, {setSubmitting} ) => {
         console.log("Handle submit", values);
         
-        const imageData = convertImageToBase64(values.imageFile);
+        const imageData = await convertImageToBase64(values.imageFile);
         const form = new FormData();
         form.append("imageLink", values.imageFile.name);
         form.append("imageData", imageData);

@@ -7,7 +7,7 @@ import { withFormik, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { render } from "@testing-library/react";
 import { TextInput } from "../components/TextInput";
-import { ImageContent } from "../components/ImageContent";
+import { ImageContent, convertImageToBase64 } from "../components/ImageContent";
 
 
 const UploadImage = () => {
@@ -36,10 +36,11 @@ const UploadImage = () => {
 
     handleSubmit: (values, {setSubmitting} ) => {
         console.log("Handle submit", values);
-
+        
+        const imageData = convertImageToBase64(values.imageFile);
         const form = new FormData();
-        form.append("imageLink", file.name);
-        form.append("imageData", file.src);
+        form.append("imageLink", values.imageFile.name);
+        form.append("imageData", imageData);
         form.append("imageName", values.imageName);
         form.append("userEmail", values.userEmail);
         form.append("copyright", values.copyright);
@@ -65,7 +66,7 @@ const UploadImage = () => {
             console.log(err);
         })
         .finally(() => {
-            Formik.resetForm();
+            //Formik.resetForm();
         });
 
         setSubmitting(false);

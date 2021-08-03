@@ -1,4 +1,22 @@
 import React, { useState, useEffect } from "react";
+
+export async function convertImageToBase64(file) {
+    const reader = new FileReader();
+    let myResolver;
+    const promiseResult = new Promise((resolver) => myResolver = resolver);
+    reader.onloadend = () => {
+        console.log("@@Result", reader.result);
+        myResolver(reader.result);
+    };
+    if (file && file.type.match("image.*")) {
+        reader.readAsDataURL(file);
+    }
+
+    const data = await promiseResult;
+    console.log("@@Data", data);
+    return data;
+}
+
 export const ImageContent = ({file}) => {
 
     const [imageLinkState, setImageLinkState] = useState({
@@ -9,14 +27,13 @@ export const ImageContent = ({file}) => {
     const { loading, imageLink } = imageLinkState;
 
     useEffect(() => {
-        setImageLinkState((imageLinkState) => ({ ...imageLinkState, loading: true }));
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImageLinkState({ loading: false, imageLink: reader.result });
-        };
-        if (file && file.type.match("image.*")) {
-            reader.readAsDataURL(file);
+        async function fetchData() {
+            const result = await convertImageToBase64(file);
+            setImageLinkState({ loading: false, imageLink: result });
         }
+        setImageLinkState((imageLinkState) => ({ ...imageLinkState, loading: true }));
+        fetchData();
+        
     }, [file]);
 
     if (!file) {

@@ -3,20 +3,22 @@ import ReactDOM from 'react-dom';
 import "../components/form.css";
 import axios from "axios";
 import baseURL from "../axios";
-import { withFormik, Formik } from "formik";
+import CustomizedDialogs from "../components/helpModal";
+import GuideContainer from "../components/uploadGuideContainer";
+import { withFormik, Formik, Form } from "formik";
 import * as Yup from "yup";
 import classnames from "classnames";
-import { render } from "@testing-library/react";
 
 
 const GetImageContent = ({file}) => {
-    
+
     const [imageLinkState, setImageLinkState] = useState({
         loading: false,
         imageLink: undefined
     });
 
     const { loading, imageLink } = imageLinkState;
+
 
     useEffect(() => {
         setImageLinkState((imageLinkState) => ({ ...imageLinkState, loading: true }));
@@ -34,24 +36,28 @@ const GetImageContent = ({file}) => {
     }
 
     return (
-        <img
-            src={imageLink}
-            alt={file.name}
-            className="img_thumbnail"
-            height={200}
-            width={200}
-        />
+        <>
+            <input type="hidden" value={imageLink} name="imageData" id="imageData" />
+            <img
+                src={imageLink}
+                alt={file.name}
+                className="img_thumbnail"
+                height={200}
+                width={200}
+            />
+        </>
+    
     );
-}
+};
 
-const UploadImage = () => {
-    const [imageLinkValue, setImageLinkValue] = useState({ file: null});
-    const { file } = imageLinkValue;
+const UploadImage = (props) => {
+
+    const [imageData, setImageData] = useState();
 
     const formikEnhancer = withFormik({
     validationSchema: Yup.object().shape({
         imageName: Yup.string().required("Image name is required.").max(150),
-        file: Yup.mixed().required("An image file is required."),
+        imageLink: Yup.mixed().required("An image file is required."),
         userEmail: Yup.string()
         .email("Invalid email format")
         .required("Email address is required.")
@@ -67,29 +73,29 @@ const UploadImage = () => {
     mapPropsToValues: ({ props }) => ({
         ...props,
     }),
+    
+    // enableReinitialize: false,
 
-    handleSubmit: (payload, { setSubmitting }) => {
+    handleSubmit: (values, { setSubmitting }) => {
         
-
+        //console.log("@@ image link value", payload.imageLink);
         const form = new FormData();
-        form.append("imageLink", file.name);
-        form.append("imageData", file.src);
-        form.append("imageName", payload.imageName);
-        form.append("userEmail", payload.userEmail);
-        form.append("copyright", payload.copyright);
-        form.append("userCopyright", payload.userCopyright);
-        form.append("imageTagOne", payload.imageTagOne);
-        form.append("imageTagTwo", payload.imageTagTwo);
-        form.append("imageTagThree", payload.imageTagThree);
-        form.append("imageTagFour", payload.imageTagFour);
+        form.append("imageData", values.imageData);
+        form.append("imageName", values.imageName);
+        form.append("userEmail", values.userEmail);
+        form.append("copyright", values.copyright);
+        form.append("userCopyright", values.userCopyright);
+        form.append("imageTagOne", values.imageTagOne);
+        form.append("imageTagTwo", values.imageTagTwo);
+        form.append("imageTagThree", values.imageTagThree);
+        form.append("imageTagFour", values.imageTagFour);
 
         //const headers = {"Content-Type": "form-data"}; 
 
-        alert("image upload payload is " + JSON.stringify(payload/*form*/));
-
+        alert("image upload payload is " + JSON.stringify(form));
+        console.log("payload: ", JSON.stringify(form));
         // Send post to server & refresh page
-        axios
-        .post(`${baseURL}uploadImage/`, form )
+        axios.post(`${baseURL}uploadImage/`, { form } )
         .then((res) => {
             console.log(JSON.stringify(res.status));
         })
@@ -98,7 +104,7 @@ const UploadImage = () => {
             console.log(err);
         })
         .finally(() => {
-            Formik.resetForm();
+            window.location.reload();
         });
 
         setSubmitting(false);
@@ -130,7 +136,7 @@ const UploadImage = () => {
     className,
     ...props
     }) => {
-    const classes = classnames(
+    let classes = classnames(
         "input-group",
         { "animated shake error": !!error },
         className
@@ -161,7 +167,6 @@ const UploadImage = () => {
         errors,
         dirty,
         handleChange,
-        setValues,
         handleBlur,
         handleSubmit,
         handleReset,
@@ -169,15 +174,18 @@ const UploadImage = () => {
         } = props;
 
         const [imageLink, setImageLink] = useState();
-        const imageLoaded = event => setImageLink(imageLink);
-    
+        const imageLoaded = event => setImageLink(imageLink);    
+        
+        // const [imageData, setImageData] = useState();
+
         return (
-        <div className="wrapper"> 
+        <div className="wrapper">
+            {/* <GuideContainer />  */}
             <div className="card-border">
                 <h5 className="card-header">Upload an Image:</h5>
                 <br />
                 <div className="card-body">
-                    <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    <form encType="multipart/form-data">
                         <div className="imageDiv">
                             <TextInput
                                 id="imageName"
@@ -200,14 +208,15 @@ const UploadImage = () => {
                                     errors={touched.imageLink && errors.imageLink}
                                     onBlur={handleBlur}
                                     onChange={(event) => {
-                                        setImageLinkValue({...imageLinkValue, file: event.currentTarget.files[0]});
-                                    }}
-                
+                                        setImageLink(event.currentTarget.files[0]);
+                                    }} 
+                                    
                                 />
-                                
-                                <GetImageContent file={file} />
+
+                                <GetImageContent file={imageLink} value={values.imageData} />
                                 
                             </div>
+                            <CustomizedDialogs />
                         </div>
                         <div className="userInfo">
                             <TextInput
@@ -239,7 +248,7 @@ const UploadImage = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 />
-                        </div>
+                            </div>
                         </div>
                         <div className="tags">
                             <TextInput
@@ -283,6 +292,7 @@ const UploadImage = () => {
                                 onBlur={handleBlur}
                             />
                         </div>
+
                         <button
                         type="button"
                         className="outline"
@@ -291,7 +301,7 @@ const UploadImage = () => {
                         >
                         Clear
                         </button>
-                        <button type="submit" disabled={isSubmitting}>Submit</button>
+                        <button type="submit" name="submit" id="submit" onClick={handleSubmit} disabled={isSubmitting}>Submit</button>
                     </form>
                 </div>
             </div>
@@ -301,23 +311,24 @@ const UploadImage = () => {
 
     const MyEnhancedForm = formikEnhancer(MyForm);
   
-  return (
-    <MyEnhancedForm
-      className="enhanced"
-      props={{
-        imageName: "",
-        imageLink: null,
-        imageData: null,
-        userEmail: "",
-        copyright: false,
-        userCopyright: "",
-        imageTagOne: "",
-        imageTagTwo: "",
-        imageTagThree: "",
-        imageTagFour: "",
-      }}
-    />
-  );
-};
+
+    return (
+
+            <MyEnhancedForm className="enhanced"
+                props={{
+                imageName: "",
+                imageData: null,
+                userEmail: "",
+                copyright: false,
+                userCopyright: "",
+                imageTagOne: "",
+                imageTagTwo: "",
+                imageTagThree: "",
+                imageTagFour: "",
+                }} 
+            />
+
+    );   
+}
 
 export default UploadImage;

@@ -22,7 +22,7 @@ export const NavLink = styled(Link)`
     cursor: pointer;
 
     &.active {
-        color: #15cdfc;
+        color: #00CED1;
         font-weight: bold;
     }
 `;

@@ -3,89 +3,56 @@ import ReactDOM from 'react-dom';
 import "../components/form.css";
 import axios from "axios";
 import baseURL from "../axios";
-import { withFormik, Formik } from "formik";
+import { withFormik, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
-import classnames from "classnames";
 import { render } from "@testing-library/react";
+import { TextInput } from "../components/TextInput";
+import { ImageContent } from "../components/ImageContent";
 
-
-const GetImageContent = ({file}) => {
-    
-    const [imageLinkState, setImageLinkState] = useState({
-        loading: false,
-        imageLink: undefined
-    });
-
-    const { loading, imageLink } = imageLinkState;
-
-    useEffect(() => {
-        setImageLinkState((imageLinkState) => ({ ...imageLinkState, loading: true }));
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImageLinkState({ loading: false, imageLink: reader.result });
-        };
-        if (file && file.type.match("image.*")) {
-            reader.readAsDataURL(file);
-        }
-    }, [file]);
-
-    if (!file) {
-        return null;
-    }
-
-    return (
-        <img
-            src={imageLink}
-            alt={file.name}
-            className="img_thumbnail"
-            height={200}
-            width={200}
-        />
-    );
-}
 
 const UploadImage = () => {
     const [imageLinkValue, setImageLinkValue] = useState({ file: null});
     const { file } = imageLinkValue;
 
     const formikEnhancer = withFormik({
-    validationSchema: Yup.object().shape({
-        imageName: Yup.string().required("Image name is required.").max(150),
-        file: Yup.mixed().required("An image file is required."),
-        userEmail: Yup.string()
-        .email("Invalid email format")
-        .required("Email address is required.")
-        .max(100),
-        copyright: Yup.bool(),
-        userCopyright: Yup.string().max(100),
-        imageTagOne: Yup.string().required("One image tag is required.").max(100),
-        imageTagTwo: Yup.string().max(100),
-        imageTagThree: Yup.string().max(100),
-        imageTagFour: Yup.string().max(100),
-    }),
+    // validationSchema: Yup.object().shape({
+    //     imageName: Yup.string().required("Image name is required.").max(150),
+    //     file: Yup.mixed().required("An image file is required."),
+    //     userEmail: Yup.string()
+    //     .email("Invalid email format")
+    //     .required("Email address is required.")
+    //     .max(100),
+    //     copyright: Yup.bool(),
+    //     userCopyright: Yup.string().max(100),
+    //     imageTagOne: Yup.string().required("One image tag is required.").max(100),
+    //     imageTagTwo: Yup.string().max(100),
+    //     imageTagThree: Yup.string().max(100),
+    //     imageTagFour: Yup.string().max(100),
+    // }),
 
     mapPropsToValues: ({ props }) => ({
         ...props,
     }),
 
-    handleSubmit: (payload, { setSubmitting }) => {
-        
+    handleSubmit: (values, {setSubmitting} ) => {
+        console.log("Handle submit", values);
 
         const form = new FormData();
         form.append("imageLink", file.name);
         form.append("imageData", file.src);
-        form.append("imageName", payload.imageName);
-        form.append("userEmail", payload.userEmail);
-        form.append("copyright", payload.copyright);
-        form.append("userCopyright", payload.userCopyright);
-        form.append("imageTagOne", payload.imageTagOne);
-        form.append("imageTagTwo", payload.imageTagTwo);
-        form.append("imageTagThree", payload.imageTagThree);
-        form.append("imageTagFour", payload.imageTagFour);
+        form.append("imageName", values.imageName);
+        form.append("userEmail", values.userEmail);
+        form.append("copyright", values.copyright);
+        form.append("userCopyright", values.userCopyright);
+        form.append("imageTagOne", values.imageTagOne);
+        form.append("imageTagTwo", values.imageTagTwo);
+        form.append("imageTagThree", values.imageTagThree);
+        form.append("imageTagFour", values.imageTagFour);
 
+        console.log("appended data");
         //const headers = {"Content-Type": "form-data"}; 
 
-        alert("image upload payload is " + JSON.stringify(payload/*form*/));
+        alert("image upload payload is " + JSON.stringify(values/*form*/));
 
         // Send post to server & refresh page
         axios
@@ -103,58 +70,12 @@ const UploadImage = () => {
 
         setSubmitting(false);
     },
-
     displayName: "BasicForm",
     });
 
     
-    const InputFeedback = ({ error }) => 
-    error ? <div className="input-feedback">{error}</div> : null;
-
-
-    const Label = ({ error, className, children, ...props }) => {
-    return (
-        <label className="label" {...props}>
-        {children}
-        </label>
-    );
-    };
-
-    const TextInput = ({
-    type,
-    id,
-    label,
-    error,
-    value,
-    onChange,
-    className,
-    ...props
-    }) => {
-    const classes = classnames(
-        "input-group",
-        { "animated shake error": !!error },
-        className
-    );
-
-    return (
-        <div className={classes}>
-        <Label htmlFor={id} error={error}>
-            {label}
-        </Label>
-        <input
-            id={id}
-            className="text-input"
-            type={type}
-            value={value}
-            onChange={onChange}
-            {...props}
-        />
-        <InputFeedback error={error} />
-        </div>
-    );
-    }
         
-    const MyForm = (props) => {   
+    const MyForm = (props) => {
         const {
         values,
         touched,
@@ -165,19 +86,18 @@ const UploadImage = () => {
         handleBlur,
         handleSubmit,
         handleReset,
-        isSubmitting,
+        isSubmitting
         } = props;
 
+        const { setFieldValue } = useFormikContext();
         const [imageLink, setImageLink] = useState();
-        const imageLoaded = event => setImageLink(imageLink);
-    
         return (
         <div className="wrapper"> 
             <div className="card-border">
                 <h5 className="card-header">Upload an Image:</h5>
                 <br />
-                <div className="card-body">
-                    <form onSubmit={handleSubmit} encType="multipart/form-data">
+                <div className="card-body"></div>
+                    <form onSubmit={handleSubmit} target="_blank">
                         <div className="imageDiv">
                             <TextInput
                                 id="imageName"
@@ -200,13 +120,13 @@ const UploadImage = () => {
                                     errors={touched.imageLink && errors.imageLink}
                                     onBlur={handleBlur}
                                     onChange={(event) => {
-                                        setImageLinkValue({...imageLinkValue, file: event.currentTarget.files[0]});
+                                        console.log("@@Setting file");
+                                        setFieldValue("imageFile", event.currentTarget.files[0]);
+                                        setImageLink(event.currentTarget.files[0]);
                                     }}
                 
                                 />
-                                
-                                <GetImageContent file={file} />
-                                
+                                <ImageContent file={imageLink} />
                             </div>
                         </div>
                         <div className="userInfo">
@@ -289,13 +209,12 @@ const UploadImage = () => {
                         onClick={handleReset}
                         disabled={!dirty || isSubmitting}
                         >
-                        Clear
+                        {"Clear"}
                         </button>
-                        <button type="submit" disabled={isSubmitting}>Submit</button>
+                        <button type="submit" disabled={isSubmitting}>{"Submit"}</button>
                     </form>
                 </div>
             </div>
-        </div>    
         );
     };
 
@@ -315,6 +234,7 @@ const UploadImage = () => {
         imageTagTwo: "",
         imageTagThree: "",
         imageTagFour: "",
+        imageFile: null
       }}
     />
   );

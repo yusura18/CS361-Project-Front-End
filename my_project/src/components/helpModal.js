@@ -69,17 +69,17 @@ export default function CustomizedDialogs() {
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-            in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+            Step 1: Choose an image file to upload. Image formats that are accepted: .png, .jpg, jpeg, .gif
+            Step 2: Enter a title for your image.
           </Typography>
           <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-            lacus vel augue laoreet rutrum faucibus dolor auctor.
+            Step 3: Enter your email address 
+            Step 4: If you'd like your copyright information displayed, check the copyright box and enter
+            your company/portfolio name in the copyright info field.
           </Typography>
           <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-            scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-            auctor fringilla.
+            Step 5: You can enter up to four image tags for your image. Enter the first one in the 
+            "image tag one" field. Once you're done, click submit!
           </Typography>
         </DialogContent>
         <DialogActions>

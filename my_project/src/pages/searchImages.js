@@ -1,10 +1,11 @@
 import React from 'react';
-import SearchForm from '../components/searchInput';
+import FindImages from '../components/findImages';
+
 
 const SearchImages = () => {
     return (
         <div>
-            <SearchForm />
+            <FindImages />
         </div>
     )
 }

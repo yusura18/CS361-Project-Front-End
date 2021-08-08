@@ -1,2 +1,2 @@
-const baseURL = "http://localhost:6511/";
+const baseURL = "http://extra2:6511/";
 export default baseURL;

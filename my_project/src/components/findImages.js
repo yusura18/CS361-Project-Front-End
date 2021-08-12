@@ -27,7 +27,7 @@ class FindImages extends React.Component {
 
     }
 
-    // Retrieves only filtered images and image tags by user email
+    // Retrieves only filtered images by image tag search query
     handleSubmit = (event) => {
         event.preventDefault();
         console.log("launching filter function")
@@ -60,17 +60,17 @@ class FindImages extends React.Component {
     render() {
         return (
             <section>
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                <form style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
                     <h2 style={{textAlign: "center", margin: 10, fontSize: "24px"}}>Find Images</h2>
-                    <label style={{textAlign: "center", fontSize: "16px", fontWeight: "bold"}}>
+                    <label style={{textAlign: "center", fontSize: "16px", fontWeight: "bold", padding: "10px"}}>
                         Search Image Tags:
                         <div>
                             <input style={{textAlign: "center", fontSize: "14px"}} type='text' value={this.state.query} name='query' onChange={this.handleInputChange}/>
                         </div>
                     </label>
-                    <input style={{textAlign: "center", alignSelf: "center", width: "fit-content", position: "inherit", fontSize: "14px", fontWeight: "bold", margin: 5, padding: 5}} type="submit" value="Search" onClick={this.handleSubmit}/>
-                    <input style={{textAlign: "center", alignSelf: "center", width: "fit-content", fontSize: "14px", fontWeight: "bold", margin: 5, padding: 5}} type="submit" value="Clear Filter" onClick={this.handleClear}/>
-                </div>
+                    <input style={{textAlign: "center", alignSelf: "center", width: "fit-content", position: "inherit", fontSize: "14px", fontWeight: "bold", margin: 5, padding: 5}} type="submit" value="Search" onClick={this.handleSubmit} autoFocus/>
+                    <input style={{textAlign: "center", alignSelf: "center", width: "fit-content", fontSize: "14px", fontWeight: "bold", margin: 5, padding: 5}} type="submit" value="Clear Filter" onClick={this.handleClear} />
+                </form>
                 <div>
                     <LoadImages data={this.state.resData}/>
                 </div>

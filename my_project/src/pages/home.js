@@ -10,7 +10,7 @@ import "../components/carousel.css";
   
     return (
         <div className="homeDiv">
-            <h2 className="homeHeader">Website Title (TBD)</h2>
+            <h2 className="homeHeader">Picture Labs</h2>
             <ImageCarousel />
         </div>
 

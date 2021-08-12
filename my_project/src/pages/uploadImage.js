@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from 'react-dom';
 import "../components/form.css";
 import axios from "axios";
 import baseURL from "../axios";
 import CustomizedDialogs from "../components/helpModal";
-import GuideContainer from "../components/uploadGuideContainer";
 import { withFormik, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { TextInput } from "../components/TextInput";
@@ -12,8 +10,6 @@ import { ImageContent, convertImageToBase64 } from "../components/ImageContent";
 
 
 const UploadImage = () => {
-
-    // <input type="hidden" value={imageLink} name="imageData" id="imageData" />
 
     const [imageLinkValue, setImageLinkValue] = useState({ file: null});
     const { file } = imageLinkValue;
@@ -38,11 +34,13 @@ const UploadImage = () => {
         ...props,
     }),
 
-    handleSubmit: async (values, { setSubmitting }) => {
-        
-        //const imageData = await convertImageToBase64(values.imageFile);
+    mapPropsToStatus: ({ props }) => ({
+        ...props,
+    }),
 
-        console.log("@@ image link value", values.imageLink);
+    handleSubmit: async (values, { setSubmitting }) => {
+
+        // Create new form data to send as post
         const form = new FormData();
         form.append("imageLink", values.imageFile.name);
         form.append("imageData", values.imageFile);
@@ -137,7 +135,7 @@ const UploadImage = () => {
                                 <ImageContent file={imageLink} />
                                 
                             </div>
-                            <CustomizedDialogs />
+                            <CustomizedDialogs />      
                         </div>
                         <div className="userInfo">
                             <TextInput

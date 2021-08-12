@@ -14,7 +14,7 @@ class Routes extends Component {
             <Router>
                 <Navbar />
                 <Switch>
-                    <Route path='/home' exact component={Home} />
+                    <Route path='/' exact component={Home} />
                     <Route path='/uploadImage' component={UploadImage} />
                     <Route path='/searchImage' component={SearchImages} />
                     <Route path='/userImages' component={UserImages} />

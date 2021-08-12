@@ -7,8 +7,8 @@ const Navbar = () => {
             <Nav>
                 <Bars />
                 <NavMenu>
-                    <NavLink to="/home">
-                        <h1>Logo</h1>    
+                    <NavLink to="/">
+                        <h1>PL</h1>    
                     </NavLink>
                     <NavLink to="/uploadImage" activeStyle>
                         Upload Image

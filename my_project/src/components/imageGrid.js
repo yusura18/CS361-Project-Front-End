@@ -103,7 +103,6 @@ const ImageGrid = (props) => {
                       component="img"
                       alt={value.imageID}
                       image={value.imageLink}
-                      
                     />
                   {/* </CardActionArea> */}
                   <CardActions key={value.imageID} id={value.imageID}>

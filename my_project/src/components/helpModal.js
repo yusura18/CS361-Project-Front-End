@@ -60,7 +60,8 @@ export default function CustomizedDialogs() {
 
   return (
     <div className="input-group" >
-      <Button variant="outlined" size="small" color="primary" onClick={handleClickOpen}>
+      <br />
+      <Button variant="outlined" size="small" color="primary" style={{fontWeight: "bold"}} onClick={handleClickOpen}>
         Help
       </Button>
       <Dialog onClose={handleClose} aria-labelledby="uploadHelp" open={open}>
@@ -69,11 +70,11 @@ export default function CustomizedDialogs() {
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Step 1: Choose an image file to upload. Image formats that are accepted: .png, .jpg, jpeg, .gif
+            Step 1: Choose an image file to upload. Image formats that are accepted: .png, .jpg, jpeg, .gif<br />
             Step 2: Enter a title for your image.
           </Typography>
           <Typography gutterBottom>
-            Step 3: Enter your email address 
+            Step 3: Enter your email address<br /> 
             Step 4: If you'd like your copyright information displayed, check the copyright box and enter
             your company/portfolio name in the copyright info field.
           </Typography>

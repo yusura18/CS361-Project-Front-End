@@ -13,7 +13,7 @@ const UserImages = () => {
                 <Typography style={{fontSize: "18px"}} align="center" paragraph>
                 To view the images you have uploaded, enter your email and all your images will
                 be displayed below. You will have the option to click "Edit" to edit each image's tags.
-                Once you're happy wit the new tags, click the "Confirm" button. You may also choose to
+                Once you're happy with the new tags, click the "Confirm" button. You may also choose to
                 delete the image and its tags from the site by clicking the "Delete" button.          
                 </Typography>
             </Container>

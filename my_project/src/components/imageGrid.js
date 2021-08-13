@@ -74,7 +74,8 @@ const ImageGrid = (props) => {
           console.log(err);
       })
       .finally(() => {
-          window.location.reload();
+          // window.location.reload();
+          props.updateState();
       })
   }
 

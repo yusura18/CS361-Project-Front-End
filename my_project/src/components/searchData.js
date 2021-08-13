@@ -53,9 +53,11 @@ class SearchData extends React.Component {
 
     // Function that will update state with current search filter
     updateStateHandler = () => {
-        axios.get(`${baseURL}userImages/`)
+        axios.get(`${baseURL}userImages/?q=${this.state.query}`)
             .then(res => {
-                this.setState({resData: res});
+                const resJSON = JSON.parse(res.data.images);
+                console.log(resJSON);
+                this.setState({resData: resJSON});
             })
             .catch((err) =>{
                 console.log("get request error...")

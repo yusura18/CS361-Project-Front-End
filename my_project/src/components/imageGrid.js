@@ -98,13 +98,11 @@ const ImageGrid = (props) => {
             {props.data.map((value, index) => (
               <Grid key={value.imageID} item xs={8}>
                 <Card >
-                  {/* <CardActionArea> */}
                     <CardMedia
                       component="img"
                       alt={value.imageID}
                       image={value.imageLink}
                     />
-                  {/* </CardActionArea> */}
                   <CardActions key={value.imageID} id={value.imageID}>
                     <form key={value.imageID}>  
                       <TextField
@@ -141,7 +139,7 @@ const ImageGrid = (props) => {
                         />
 
                       <TextField
-                        id="imageTagFour"  //outline-basic
+                        id="imageTagFour" 
                         name="imageTagFour"
                         size="small"
                         label="Tag 4"

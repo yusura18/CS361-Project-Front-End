@@ -21,6 +21,7 @@ const styles = (theme) => ({
   },
 });
 
+// Create a Modal to list instructions for the upload image form
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (

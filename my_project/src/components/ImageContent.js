@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-
+// Use fileReader to get image file content
 export async function convertImageToBase64(file) {
     const reader = new FileReader();
     let myResolver;
     const promiseResult = new Promise((resolver) => myResolver = resolver);
     reader.onloadend = () => {
-        console.log("@@Result", reader.result);
         myResolver(reader.result);
     };
     if (file && file.type.match("image.*")) {
@@ -19,6 +18,7 @@ export async function convertImageToBase64(file) {
 }
 
 
+// Use image file content to load an image thumbnail preview on form
 export const ImageContent = ({file}) => {
 
     const [imageLinkState, setImageLinkState] = useState({

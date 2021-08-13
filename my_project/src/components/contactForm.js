@@ -20,7 +20,8 @@ export default function ContactForm() {
           "header": "New website Comment",
           "message": data.Comments
       }
-
+    
+    /* Using Scott's email microservice */
     // Send post to server & refresh page
     axios.post("https://floating-shelf-48098.herokuapp.com/imagesite", params)
     .then((res) => {

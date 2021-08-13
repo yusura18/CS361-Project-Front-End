@@ -56,7 +56,7 @@ class FindImages extends React.Component {
         window.location.reload();
     }
 
-    // Render search form
+    // Render search form and Image Cards 
     render() {
         return (
             <section>

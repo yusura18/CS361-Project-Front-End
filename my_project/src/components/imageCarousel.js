@@ -89,10 +89,11 @@ class ImageCarousel extends Component {
         super(props);
     
         this.state = {
-          images: {items}   // locally storeg images
+          images: {items}   // locally stored images
         }
     }
     
+    // Carousel settings for home page
     getSliderSettings(){
         return {
             dots: true,
@@ -117,6 +118,7 @@ class ImageCarousel extends Component {
         })
        }
 
+       // Map the locally storages to each Slider's img tag
     render() {
         const settings = this.getSliderSettings();
         const { images } = this.state;
